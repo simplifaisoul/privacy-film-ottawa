@@ -61,7 +61,7 @@ function App() {
             imageSrc={door3}
             imageAlt="Modern door with window film protection"
             title="UV Protection & Improved Energy Efficiency"
-            imagePosition="right"
+            imagePosition="left"
             content={
               <div className="space-y-4">
                 <div>
