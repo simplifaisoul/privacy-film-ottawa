@@ -18,7 +18,7 @@ export function Hero() {
 
             <div className="container relative mx-auto px-4 text-center md:px-6 lg:px-8">
                 <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
-                    SPECIALIZING IN <br className="hidden sm:block" />
+                    <span className="block text-2xl sm:text-3xl font-semibold mb-2">OTTAWA'S EXPERTS IN</span>
                     <span className="text-blue-200">RESIDENTIAL PRIVACY FILM</span>
                 </h1>
                 <p className="mx-auto mb-10 max-w-2xl text-lg text-blue-100 sm:text-xl">
