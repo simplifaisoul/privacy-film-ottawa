@@ -13,14 +13,16 @@ export function Stats() {
             <div className="container mx-auto px-4 md:px-6 lg:px-8">
                 <dl className="grid grid-cols-1 gap-y-12 gap-x-8 text-center sm:grid-cols-2 lg:grid-cols-4">
                     {stats.map((stat) => (
-                        <div key={stat.id} className="mx-auto flex max-w-xs flex-col gap-y-2 items-center">
-                            <div className="flex items-center justify-center p-3 rounded-full bg-white/10 mb-2">
+                        <div key={stat.id} className="flex flex-col items-center justify-start text-center">
+                            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/20">
                                 <stat.icon className="h-6 w-6 text-blue-200" />
                             </div>
-                            <dt className="text-base leading-7 text-blue-200">{stat.name}</dt>
-                            <dd className="order-first text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+                            <dd className="mb-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
                                 {stat.value}
                             </dd>
+                            <dt className="text-sm font-medium leading-6 text-blue-200 uppercase tracking-wide">
+                                {stat.name}
+                            </dt>
                         </div>
                     ))}
                 </dl>
