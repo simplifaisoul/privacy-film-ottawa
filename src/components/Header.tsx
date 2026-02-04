@@ -1,4 +1,4 @@
-import { ShieldCheck, Phone } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 export function Header() {
     return (
@@ -18,7 +18,6 @@ export function Header() {
                         Services
                     </a>
                     <a href="#contact" className="inline-flex items-center justify-center rounded-md bg-blue-900 px-4 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-blue-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-950">
-                        <Phone className="mr-2 h-4 w-4" />
                         Get a Quote
                     </a>
                 </nav>

@@ -24,54 +24,75 @@ export function ContactForm() {
                     <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div>
-                                <label htmlFor="name" className="mb-2 block text-sm font-medium text-gray-700">Name</label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    className="w-full rounded-md border border-gray-300 px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                                    placeholder="John Doe"
-                                />
+                                <label htmlFor="name" className="block text-sm font-semibold leading-6 text-gray-900">
+                                    Name <span className="text-red-500">*</span>
+                                </label>
+                                <div className="mt-2.5">
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        id="name"
+                                        autoComplete="given-name"
+                                        required
+                                        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
                             </div>
                             <div>
-                                <label htmlFor="email" className="mb-2 block text-sm font-medium text-gray-700">Email</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    className="w-full rounded-md border border-gray-300 px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                                    placeholder="john@example.com"
-                                />
+                                <label htmlFor="email" className="block text-sm font-semibold leading-6 text-gray-900">
+                                    Email <span className="text-red-500">*</span>
+                                </label>
+                                <div className="mt-2.5">
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        id="email"
+                                        autoComplete="email"
+                                        required
+                                        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div>
-                                <label htmlFor="phone" className="mb-2 block text-sm font-medium text-gray-700">Phone</label>
-                                <input
-                                    type="tel"
-                                    id="phone"
-                                    className="w-full rounded-md border border-gray-300 px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                                    placeholder="(613) 555-0123"
-                                />
+                                <label htmlFor="phone" className="block text-sm font-semibold leading-6 text-gray-900">
+                                    Phone Number
+                                </label>
+                                <div className="mt-2.5">
+                                    <input
+                                        type="tel"
+                                        name="phone"
+                                        id="phone"
+                                        autoComplete="tel"
+                                        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
                             </div>
                             <div>
-                                <label htmlFor="location" className="mb-2 block text-sm font-medium text-gray-700">Location</label>
-                                <input
-                                    type="text"
-                                    id="location"
-                                    className="w-full rounded-md border border-gray-300 px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                                    placeholder="e.g., Kanata"
-                                />
+                                <label htmlFor="location" className="block text-sm font-semibold leading-6 text-gray-900">Location</label>
+                                <div className="mt-2.5">
+                                    <input
+                                        type="text"
+                                        id="location"
+                                        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                        placeholder="e.g., Kanata"
+                                    />
+                                </div>
                             </div>
                         </div>
 
                         <div>
-                            <label htmlFor="message" className="mb-2 block text-sm font-medium text-gray-700">Message / Details</label>
-                            <textarea
-                                id="message"
-                                rows={4}
-                                className="w-full rounded-md border border-gray-300 px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                                placeholder="Tell us about your door size and what kind of film you are interested in..."
-                            ></textarea>
+                            <label htmlFor="message" className="block text-sm font-semibold leading-6 text-gray-900">Message / Details</label>
+                            <div className="mt-2.5">
+                                <textarea
+                                    id="message"
+                                    rows={4}
+                                    className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                    placeholder="Please let us know what you are interested in having done, and any other relevant details"
+                                ></textarea>
+                            </div>
                         </div>
 
                         <div>

@@ -42,7 +42,7 @@ export function ContentSection({
                             />
                         </div>
                         {/* Horizontal separator */}
-                        <hr className="mt-8 border-t-2 border-gray-200" />
+                        <hr className="mt-8 border-t-4 border-blue-900 w-full mx-auto" />
                     </motion.div>
 
                     <motion.div
