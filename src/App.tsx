@@ -2,6 +2,8 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { Hero } from "./components/Hero";
 import { BeforeAfter } from "./components/BeforeAfter";
+import { Features } from "./components/Features";
+import { Stats } from "./components/Stats";
 import { ContentSection } from "./components/ContentSection";
 import { ContactForm } from "./components/ContactForm";
 
@@ -16,6 +18,7 @@ function App() {
       <main className="flex-grow">
         <Hero />
         <BeforeAfter />
+        <Features />
 
         <div id="benefits">
           {/* Section 1: Intro + Privacy (Image Left) */}
@@ -86,6 +89,7 @@ function App() {
           />
         </div>
 
+        <Stats />
         <ContactForm />
       </main>
       <Footer />
