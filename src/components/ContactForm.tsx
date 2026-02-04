@@ -17,7 +17,7 @@ export function ContactForm() {
                     <div className="mb-10 text-center">
                         <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Get a Free Quote</h2>
                         <p className="mt-4 text-lg text-gray-600">
-                            Fill out the form below to request a quote. You can upload an image of your door for a more accurate assessment.
+                            Fill out the form below to request a quote. Please Upload any images of the space to give us a more accurate assessment.
                         </p>
                     </div>
 

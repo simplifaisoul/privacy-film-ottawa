@@ -10,6 +10,7 @@ import { ContactForm } from "./components/ContactForm";
 import door1 from "./assets/door-1.jpg";
 import door2 from "./assets/door-2.jpg";
 import door3 from "./assets/door-3.jpg";
+import door4 from "./assets/door-4.jpg";
 
 function App() {
   return (
@@ -76,7 +77,7 @@ function App() {
 
           {/* Section 4: Energy Efficiency (Image Right) */}
           <ContentSection
-            imageSrc={door3}
+            imageSrc={door4}
             imageAlt="Energy efficient door with window film"
             title="Improved Energy Efficiency"
             imagePosition="right"
