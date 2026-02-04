@@ -36,7 +36,7 @@ function App() {
                   If you have clear glass on your front or back door, one simple yet effective way to enhance your front door's look and performance is by adding window film. Whether your door has a large glass panel or just a small decorative insert, window film can offer a range of benefits that improve both aesthetics and functionality.
                 </p>
                 <p>
-                  One of the primary reasons homeowners choose window film for their front doors is to add privacy while still allowing natural light to enter. Traditional blinds or curtains block out light completely, while window film keeps your entryway bright and welcoming. Window film provides a frosted, tinted, textured or decorative effect that obscures the view from outside. This is especially useful for homes with glass-paneled doors or sidelights that may otherwise expose too much of the interior.
+                  One of the primary reasons homeowners choose window film for their front doors is to add privacy while still allowing natural light to enter. Traditional blinds or curtains block out light completely, while window film keeps your entryway bright and welcoming. This is especially useful for homes with glass-paneled doors or sidelights that may otherwise expose too much of the interior.
                 </p>
               </div>
             }
