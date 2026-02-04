@@ -41,6 +41,8 @@ export function ContentSection({
                                 className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                             />
                         </div>
+                        {/* Horizontal separator */}
+                        <hr className="mt-8 border-t-2 border-gray-200" />
                     </motion.div>
 
                     <motion.div

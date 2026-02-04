@@ -24,6 +24,9 @@ export function Hero() {
                 <p className="mx-auto mb-10 max-w-2xl text-lg text-blue-100 sm:text-xl">
                     Enhance your home's privacy, security, and energy efficiency with premium window film solutions for Ottawa homeowners.
                 </p>
+                <p className="mx-auto mb-10 max-w-2xl text-base italic text-blue-200 sm:text-lg">
+                    Proudly serving the Ottawa area for over 25 years
+                </p>
                 <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
                     <a
                         href="#contact"
