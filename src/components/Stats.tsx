@@ -2,7 +2,7 @@ import { Award, ShieldCheck, ThumbsUp, MapPin } from 'lucide-react';
 
 const stats = [
     { id: 1, name: 'Years of Experience', value: '25+', icon: Award },
-    { id: 2, name: 'Homes & Businesses Serviced', value: '100\'s', icon: ShieldCheck },
+    { id: 2, name: 'Homes & Businesses Serviced', value: "100's of", icon: ShieldCheck },
     { id: 3, name: 'Customer Satisfaction', value: 'Guaranteed', icon: ThumbsUp },
     { id: 4, name: 'Locally Owned', value: 'Quick Turnaround', icon: MapPin },
 ];
