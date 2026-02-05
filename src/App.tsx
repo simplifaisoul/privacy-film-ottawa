@@ -10,7 +10,7 @@ import { ContactForm } from "./components/ContactForm";
 import door1 from "./assets/door-1.jpg";
 import door2 from "./assets/door-2.jpg";
 import door3 from "./assets/door-3.jpg";
-import door4 from "./assets/door-4.jpg";
+import door4 from "./assets/door-final.jpg";
 
 function App() {
   return (

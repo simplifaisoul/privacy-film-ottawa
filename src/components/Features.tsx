@@ -44,15 +44,15 @@ export function Features() {
                         {features.map((feature) => (
                             <div
                                 key={feature.name}
-                                className="group relative flex flex-col items-center p-6 text-center bg-blue-900 rounded-2xl shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border border-blue-800"
+                                className="group relative flex flex-col items-center p-6 text-center bg-white rounded-2xl shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border border-gray-100"
                             >
                                 <div className={`mb-6 flex h-16 w-16 items-center justify-center rounded-2xl ${feature.className}`}>
                                     <feature.icon className="h-8 w-8" aria-hidden="true" />
                                 </div>
-                                <h3 className="mb-2 text-xl font-bold text-white">
+                                <h3 className="mb-2 text-xl font-bold text-gray-900">
                                     {feature.name}
                                 </h3>
-                                <p className="text-base text-blue-100">
+                                <p className="text-base text-gray-600">
                                     {feature.description}
                                 </p>
                             </div>
