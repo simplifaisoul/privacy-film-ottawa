@@ -1,12 +1,50 @@
-import { Upload, Send } from 'lucide-react';
-import { useState } from 'react';
+import { Upload, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { useState, type FormEvent } from 'react';
 
 export function ContactForm() {
     const [fileName, setFileName] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setFileName(e.target.files[0].name);
+        }
+    };
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setSubmitStatus('idle');
+        setErrorMessage('');
+
+        const form = e.currentTarget;
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('https://formspree.io/f/xlgwddby', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                setSubmitStatus('success');
+                form.reset();
+                setFileName(null);
+            } else {
+                const data = await response.json();
+                setSubmitStatus('error');
+                setErrorMessage(data.error || 'Something went wrong. Please try again.');
+            }
+        } catch (error) {
+            setSubmitStatus('error');
+            setErrorMessage('Network error. Please check your connection and try again.');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -21,7 +59,29 @@ export function ContactForm() {
                         </p>
                     </div>
 
-                    <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                    {submitStatus === 'success' && (
+                        <div className="mb-6 rounded-lg bg-green-50 border border-green-200 p-4 flex items-start gap-3">
+                            <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                            <div>
+                                <h3 className="font-semibold text-green-900">Message Sent Successfully!</h3>
+                                <p className="text-sm text-green-700 mt-1">
+                                    Thank you for your inquiry. We'll get back to you within 24 hours.
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
+                    {submitStatus === 'error' && (
+                        <div className="mb-6 rounded-lg bg-red-50 border border-red-200 p-4 flex items-start gap-3">
+                            <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                            <div>
+                                <h3 className="font-semibold text-red-900">Submission Failed</h3>
+                                <p className="text-sm text-red-700 mt-1">{errorMessage}</p>
+                            </div>
+                        </div>
+                    )}
+
+                    <form className="space-y-6" onSubmit={handleSubmit}>
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div>
                                 <label htmlFor="name" className="block text-sm font-semibold leading-6 text-gray-900">
@@ -34,7 +94,8 @@ export function ContactForm() {
                                         id="name"
                                         autoComplete="given-name"
                                         required
-                                        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                        disabled={isSubmitting}
+                                        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     />
                                 </div>
                             </div>
@@ -49,7 +110,8 @@ export function ContactForm() {
                                         id="email"
                                         autoComplete="email"
                                         required
-                                        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                        disabled={isSubmitting}
+                                        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     />
                                 </div>
                             </div>
@@ -66,7 +128,8 @@ export function ContactForm() {
                                         name="phone"
                                         id="phone"
                                         autoComplete="tel"
-                                        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                        disabled={isSubmitting}
+                                        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     />
                                 </div>
                             </div>
@@ -75,8 +138,10 @@ export function ContactForm() {
                                 <div className="mt-2.5">
                                     <input
                                         type="text"
+                                        name="location"
                                         id="location"
-                                        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                        disabled={isSubmitting}
+                                        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:cursor-not-allowed"
                                         placeholder="e.g., Kanata"
                                     />
                                 </div>
@@ -87,9 +152,11 @@ export function ContactForm() {
                             <label htmlFor="message" className="block text-sm font-semibold leading-6 text-gray-900">Message / Details</label>
                             <div className="mt-2.5">
                                 <textarea
+                                    name="message"
                                     id="message"
                                     rows={4}
-                                    className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                    disabled={isSubmitting}
+                                    className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 disabled:bg-gray-100 disabled:cursor-not-allowed"
                                     placeholder="Please let us know what you are interested in having done, and any other relevant details"
                                 ></textarea>
                             </div>
@@ -106,7 +173,15 @@ export function ContactForm() {
                                             className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500"
                                         >
                                             <span>Upload a file</span>
-                                            <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} />
+                                            <input
+                                                id="file-upload"
+                                                name="file"
+                                                type="file"
+                                                className="sr-only"
+                                                onChange={handleFileChange}
+                                                disabled={isSubmitting}
+                                                accept="image/*"
+                                            />
                                         </label>
                                         <p className="pl-1">or drag and drop</p>
                                     </div>
@@ -121,10 +196,23 @@ export function ContactForm() {
                         <div className="flex justify-end">
                             <button
                                 type="submit"
-                                className="inline-flex items-center justify-center rounded-md bg-blue-900 px-8 py-3 text-base font-medium text-white shadow-lg transition-transform hover:scale-105 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                disabled={isSubmitting}
+                                className="inline-flex items-center justify-center rounded-md bg-blue-900 px-8 py-3 text-base font-medium text-white shadow-lg transition-all hover:scale-105 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                             >
-                                Send Request
-                                <Send className="ml-2 h-5 w-5" />
+                                {isSubmitting ? (
+                                    <>
+                                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Sending...
+                                    </>
+                                ) : (
+                                    <>
+                                        Send Request
+                                        <Send className="ml-2 h-5 w-5" />
+                                    </>
+                                )}
                             </button>
                         </div>
                     </form>
