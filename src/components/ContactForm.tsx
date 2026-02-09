@@ -7,19 +7,61 @@ export function ContactForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
+    const [compressedImage, setCompressedImage] = useState<string | null>(null);
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const compressImage = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target?.result as string;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Resize if image is too large
+                    const maxDimension = 800;
+                    if (width > height && width > maxDimension) {
+                        height = (height * maxDimension) / width;
+                        width = maxDimension;
+                    } else if (height > maxDimension) {
+                        width = (width * maxDimension) / height;
+                        height = maxDimension;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx?.drawImage(img, 0, 0, width, height);
+
+                    // Compress to JPEG with quality adjustment
+                    const compressed = canvas.toDataURL('image/jpeg', 0.7);
+                    resolve(compressed);
+                };
+                img.onerror = reject;
+            };
+            reader.onerror = reject;
+        });
+    };
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
-            // Check file size (500KB limit for EmailJS free tier)
-            if (file.size > 500000) {
-                setErrorMessage('File size must be less than 500KB. Please choose a smaller image.');
-                setSubmitStatus('error');
-                e.target.value = '';
-                return;
-            }
             setFileName(file.name);
             setSubmitStatus('idle');
+
+            try {
+                // Compress the image
+                const compressed = await compressImage(file);
+                setCompressedImage(compressed);
+            } catch (error) {
+                setErrorMessage('Failed to process image. Please try another file.');
+                setSubmitStatus('error');
+                e.target.value = '';
+            }
         }
     };
 
@@ -30,22 +72,34 @@ export function ContactForm() {
         setErrorMessage('');
 
         const form = e.currentTarget;
+        const formData = new FormData(form);
 
         try {
             // Initialize EmailJS with public key
             emailjs.init('IZU9ROapNY8GQerPw');
 
-            // Send email with form data
-            const result = await emailjs.sendForm(
+            // Prepare template parameters
+            const templateParams = {
+                from_name: formData.get('from_name'),
+                from_email: formData.get('from_email'),
+                phone: formData.get('phone') || 'Not provided',
+                location: formData.get('location') || 'Not provided',
+                message: formData.get('message') || 'No message provided',
+                attachment: compressedImage || '' // Send compressed image as base64
+            };
+
+            // Send email with template parameters
+            const result = await emailjs.send(
                 'service_lvga4le',  // Service ID
                 'template_fckxw8e', // Template ID
-                form
+                templateParams
             );
 
             if (result.status === 200) {
                 setSubmitStatus('success');
                 form.reset();
                 setFileName(null);
+                setCompressedImage(null);
             } else {
                 setSubmitStatus('error');
                 setErrorMessage('Something went wrong. Please try again.');
@@ -174,7 +228,7 @@ export function ContactForm() {
 
                         <div>
                             <label className="mb-2 block text-sm font-medium text-gray-700">
-                                Upload Photo (Optional - Max 500KB)
+                                Upload Photo (Optional - Auto-compressed)
                             </label>
                             <div className="flex w-full items-center justify-center rounded-md border-2 border-dashed border-gray-300 px-6 py-10 transition-colors hover:border-blue-400 hover:bg-blue-50">
                                 <div className="text-center">
@@ -197,7 +251,7 @@ export function ContactForm() {
                                         </label>
                                         <p className="pl-1">or drag and drop</p>
                                     </div>
-                                    <p className="text-xs text-gray-500">PNG, JPG, GIF up to 500KB</p>
+                                    <p className="text-xs text-gray-500">PNG, JPG, GIF (automatically compressed for email)</p>
                                     {fileName && (
                                         <p className="mt-2 text-sm font-medium text-green-600">Selected: {fileName}</p>
                                     )}
