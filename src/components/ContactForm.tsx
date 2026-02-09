@@ -1,5 +1,6 @@
 import { Upload, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
+import emailjs from '@emailjs/browser';
 
 export function ContactForm() {
     const [fileName, setFileName] = useState<string | null>(null);
@@ -9,7 +10,16 @@ export function ContactForm() {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            setFileName(e.target.files[0].name);
+            const file = e.target.files[0];
+            // Check file size (500KB limit for EmailJS free tier)
+            if (file.size > 500000) {
+                setErrorMessage('File size must be less than 500KB. Please choose a smaller image.');
+                setSubmitStatus('error');
+                e.target.value = '';
+                return;
+            }
+            setFileName(file.name);
+            setSubmitStatus('idle');
         }
     };
 
@@ -20,29 +30,29 @@ export function ContactForm() {
         setErrorMessage('');
 
         const form = e.currentTarget;
-        const formData = new FormData(form);
 
         try {
-            const response = await fetch('https://formspree.io/f/xlgwddby', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
+            // Initialize EmailJS with public key
+            emailjs.init('IZU9ROapNY8GQerPw');
 
-            if (response.ok) {
+            // Send email with form data
+            const result = await emailjs.sendForm(
+                'service_lvga4le',  // Service ID
+                'template_fckxw8e', // Template ID
+                form
+            );
+
+            if (result.status === 200) {
                 setSubmitStatus('success');
                 form.reset();
                 setFileName(null);
             } else {
-                const data = await response.json();
                 setSubmitStatus('error');
-                setErrorMessage(data.error || 'Something went wrong. Please try again.');
+                setErrorMessage('Something went wrong. Please try again.');
             }
-        } catch (error) {
+        } catch (error: any) {
             setSubmitStatus('error');
-            setErrorMessage('Network error. Please check your connection and try again.');
+            setErrorMessage(error?.text || 'Failed to send message. Please try again or contact us directly.');
         } finally {
             setIsSubmitting(false);
         }
@@ -84,14 +94,14 @@ export function ContactForm() {
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div>
-                                <label htmlFor="name" className="block text-sm font-semibold leading-6 text-gray-900">
+                                <label htmlFor="from_name" className="block text-sm font-semibold leading-6 text-gray-900">
                                     Name <span className="text-red-500">*</span>
                                 </label>
                                 <div className="mt-2.5">
                                     <input
                                         type="text"
-                                        name="name"
-                                        id="name"
+                                        name="from_name"
+                                        id="from_name"
                                         autoComplete="given-name"
                                         required
                                         disabled={isSubmitting}
@@ -100,14 +110,14 @@ export function ContactForm() {
                                 </div>
                             </div>
                             <div>
-                                <label htmlFor="email" className="block text-sm font-semibold leading-6 text-gray-900">
+                                <label htmlFor="from_email" className="block text-sm font-semibold leading-6 text-gray-900">
                                     Email <span className="text-red-500">*</span>
                                 </label>
                                 <div className="mt-2.5">
                                     <input
                                         type="email"
-                                        name="email"
-                                        id="email"
+                                        name="from_email"
+                                        id="from_email"
                                         autoComplete="email"
                                         required
                                         disabled={isSubmitting}
@@ -163,19 +173,21 @@ export function ContactForm() {
                         </div>
 
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-gray-700">Upload Photo (Optional)</label>
+                            <label className="mb-2 block text-sm font-medium text-gray-700">
+                                Upload Photo (Optional - Max 500KB)
+                            </label>
                             <div className="flex w-full items-center justify-center rounded-md border-2 border-dashed border-gray-300 px-6 py-10 transition-colors hover:border-blue-400 hover:bg-blue-50">
                                 <div className="text-center">
                                     <Upload className="mx-auto h-12 w-12 text-gray-400" />
                                     <div className="mt-4 flex text-sm text-gray-600 justify-center">
                                         <label
-                                            htmlFor="file-upload"
+                                            htmlFor="attachment"
                                             className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500"
                                         >
                                             <span>Upload a file</span>
                                             <input
-                                                id="file-upload"
-                                                name="file"
+                                                id="attachment"
+                                                name="attachment"
                                                 type="file"
                                                 className="sr-only"
                                                 onChange={handleFileChange}
@@ -185,7 +197,7 @@ export function ContactForm() {
                                         </label>
                                         <p className="pl-1">or drag and drop</p>
                                     </div>
-                                    <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                                    <p className="text-xs text-gray-500">PNG, JPG, GIF up to 500KB</p>
                                     {fileName && (
                                         <p className="mt-2 text-sm font-medium text-green-600">Selected: {fileName}</p>
                                     )}
