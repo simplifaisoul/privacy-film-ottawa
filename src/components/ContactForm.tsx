@@ -21,8 +21,8 @@ export function ContactForm() {
                     let width = img.width;
                     let height = img.height;
 
-                    // Resize if image is too large
-                    const maxDimension = 800;
+                    // Resize to smaller dimension to ensure we stay under 50KB
+                    const maxDimension = 500; // Reduced significantly
                     if (width > height && width > maxDimension) {
                         height = (height * maxDimension) / width;
                         width = maxDimension;
@@ -37,9 +37,21 @@ export function ContactForm() {
                     const ctx = canvas.getContext('2d');
                     ctx?.drawImage(img, 0, 0, width, height);
 
-                    // Compress to JPEG with quality adjustment
-                    const compressed = canvas.toDataURL('image/jpeg', 0.7);
-                    resolve(compressed);
+                    // Start with lower quality and reduce until under 50KB
+                    let quality = 0.6;
+                    let compressed = canvas.toDataURL('image/jpeg', quality);
+
+                    // Keep reducing quality until we're under 50KB
+                    while (compressed.length > 50000 && quality > 0.1) {
+                        quality -= 0.05;
+                        compressed = canvas.toDataURL('image/jpeg', quality);
+                    }
+
+                    if (compressed.length > 50000) {
+                        reject(new Error('Image too large even after compression'));
+                    } else {
+                        resolve(compressed);
+                    }
                 };
                 img.onerror = reject;
             };
@@ -241,7 +253,6 @@ export function ContactForm() {
                                             <span>Upload a file</span>
                                             <input
                                                 id="attachment"
-                                                name="attachment"
                                                 type="file"
                                                 className="sr-only"
                                                 onChange={handleFileChange}
